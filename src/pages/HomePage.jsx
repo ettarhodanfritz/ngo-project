@@ -1,64 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "../App.css";
 
 const HomePage = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   // Ensure Google Translate dropdown is ready
-  useEffect(() => {
-    // function to remove unwanted Google elements (will retry until gone)
-    const cleanup = () => {
-      // remove any visible google logo links / gadget wrappers
-      document
-        .querySelectorAll(
-          ".goog-logo-link, .goog-te-gadget, .goog-te-gadget-icon"
-        )
-        .forEach((el) => {
-          try {
-            el.remove();
-          } catch (err) {}
-        });
-
-      // hide / remove the google menu iframe(s) that sometimes persist
-      document
-        .querySelectorAll(
-          "iframe.goog-te-menu-frame, iframe.goog-te-banner-frame"
-        )
-        .forEach((ifr) => {
-          // remove the iframe element from DOM
-          try {
-            ifr.style.display = "none";
-            ifr.remove();
-          } catch (err) {}
-        });
-
-      // sometimes google adds an inline div with class .goog-te-gadget -> ensure it's hidden
-      const g = document.querySelector(
-        "#google_translate_element .goog-te-gadget"
-      );
-      if (g) {
-        try {
-          g.style.display = "none";
-        } catch (err) {}
-      }
-    };
-
-    // run cleanup periodically for a short window while GT loads
-    let tries = 0;
-    const interval = setInterval(() => {
-      cleanup();
-      tries++;
-      if (tries > 25) clearInterval(interval); // stop after ~5 seconds
-    }, 200);
-
-    // also run once after a short delay
-    const timeout = setTimeout(cleanup, 800);
-
-    return () => {
-      clearInterval(interval);
-      clearTimeout(timeout);
-    };
-  }, []);
-  // Language switcher function
 
   return (
     <div className="home-page">

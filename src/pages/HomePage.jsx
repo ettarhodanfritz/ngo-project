@@ -179,10 +179,23 @@ const HomePage = () => {
         <h2>ACKNOWLEDGEMENTS</h2>
         <p>Our sincere thanks to all those who support us in any way.</p>
         <div className="ack-photos">
-          <img src="/images/Minrex.jpeg" alt="Supporter 1" />
-          <img src="/images/mincult.jpeg" alt="Supporter 2" />
-          <img src="/images/official.jpeg" alt="Supporter 3" />
-          <img src="/images/port.jpeg" alt="Supporter 4" />
+          <div className="ack-photos-inner">
+            {[
+              "/images/Minrex.jpeg",
+              "/images/mincult.jpeg",
+              "/images/official.jpeg",
+              "/images/port.jpeg",
+            ]
+              .concat([
+                "/images/Minrex.jpeg",
+                "/images/mincult.jpeg",
+                "/images/official.jpeg",
+                "/images/port.jpeg",
+              ])
+              .map((src, index) => (
+                <img key={index} src={src} alt={`Supporter ${index + 1}`} />
+              ))}
+          </div>
         </div>
       </section>
 

@@ -1,30 +1,38 @@
 import React from "react";
-import "../App.css";
-import { useState } from "react";
+import "../App.css"; // reuses existing styles
 
-const NewsPage = () => {
-  const [menuOpen, setMenuOpen] = useState(false);
+const GalleryPage = () => {
+  // array of 38 placeholder images (replace with your real image paths)
+  const photos = Array.from(
+    { length: 38 },
+    (_, i) => `/images/gallery${i + 1}.jpg`
+  );
+
   return (
-    <div className="news-page">
+    <div className="gallery-page">
       {/* Navbar */}
       <nav className="navbar">
         <div className="logo">
           <img src="/images/logo.jpg" alt="Foundation Logo" />
         </div>
-        <div
-          className={`hamburger ${menuOpen ? "open" : ""}`}
-          onClick={() => setMenuOpen(!menuOpen)}
-        >
+
+        <div className="hamburger">
           <span></span>
           <span></span>
           <span></span>
         </div>
-        <ul className={`nav-links ${menuOpen ? "active" : ""}`}>
+
+        <ul className="nav-links">
           <li>
             <a href="/">Home</a>
           </li>
-          <li>
+          <li className="dropdown">
             <a href="/projects">Our Projects</a>
+            <ul className="dropdown-menu">
+              <li>
+                <a href="/gallery">Gallery</a>
+              </li>
+            </ul>
           </li>
           <li>
             <a href="/about">About Us</a>
@@ -41,6 +49,7 @@ const NewsPage = () => {
             </a>
           </li>
         </ul>
+
         <div className="language-switcher">
           <select>
             <option>EN</option>
@@ -57,28 +66,38 @@ const NewsPage = () => {
         </div>
       </nav>
 
-      {/* Hero / News Section */}
+      {/* Hero Section */}
       <section
         className="hero"
         style={{
-          backgroundImage: "url('/images/news-bg2.jpg')",
+          backgroundImage: "url('/images/gallery-main.jpg')",
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
-          minHeight: "60vh",
         }}
       >
         <div className="hero-overlay">
-          <h1>MAJOR MEDIA EVENT</h1>
+          <h1>OUR GALLERY</h1>
+          <h2>Celebrating Our Projects & Activities</h2>
           <p>
-            Posted on 21 November 2025 | Published on fondationaph.org | Leave a
-            Comment on MAJOR MEDIA EVENT
+            Explore the moments that define the Abram Petrovich Hannibal
+            Foundation
           </p>
-          <p>
-            African First Crowns “Russe” Horizons Nouveaux Magazine – No. 306 of
-            01 October 2025; Horizons Nouveaux Magazine No. 282 of 02 April
-            2025; Horizons Nouveaux Magazine No. 001 of 15 November 2024
-          </p>
+        </div>
+      </section>
+
+      {/* Gallery Section */}
+      <section className="gallery-section">
+        <div className="gallery-grid">
+          {photos.map((src, index) => (
+            <div key={index} className="gallery-photo-container">
+              <img
+                src={src}
+                alt={`Gallery ${index + 1}`}
+                className="gallery-photo"
+              />
+            </div>
+          ))}
         </div>
       </section>
 
@@ -128,7 +147,7 @@ const NewsPage = () => {
           </div>
           <div className="footer-column">
             <h3>Follow Us</h3>
-            <div className="social-icons">{/* social icons here */}</div>
+            <div className="social-icons"></div>
           </div>
         </div>
         <div className="footer-bottom">
@@ -141,4 +160,4 @@ const NewsPage = () => {
   );
 };
 
-export default NewsPage;
+export default GalleryPage;

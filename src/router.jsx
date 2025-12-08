@@ -6,7 +6,7 @@ import NewsPage from "./pages/NewsPage";
 import ContactPage from "./pages/ContactPage";
 import DonatePage from "./pages/DonatePage";
 import BiographyPage from "./pages/BiographyPage";
-
+import GalleryPage from "./pages/GalleryPage";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -36,6 +36,10 @@ const router = createBrowserRouter([
   {
     path: "/biography",
     element: <BiographyPage />,
+  },
+  {
+    path: "/gallery",
+    element: <GalleryPage />,
   },
 ]);
 

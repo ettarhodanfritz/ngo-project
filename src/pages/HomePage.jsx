@@ -3,7 +3,6 @@ import "../App.css";
 
 const HomePage = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-  // Ensure Google Translate dropdown is ready
 
   return (
     <div className="home-page">
@@ -12,6 +11,7 @@ const HomePage = () => {
         <div className="logo">
           <img src="/images/logo.jpg" alt="Foundation Logo" />
         </div>
+
         <div
           className={`hamburger ${menuOpen ? "open" : ""}`}
           onClick={() => setMenuOpen(!menuOpen)}
@@ -20,28 +20,42 @@ const HomePage = () => {
           <span></span>
           <span></span>
         </div>
+
         <ul className={`nav-links ${menuOpen ? "active" : ""}`}>
           <li>
             <a href="/">Home</a>
           </li>
-          <li>
+
+          {/* ▼▼ ONLY GALLERY AS DROPDOWN ▼▼ */}
+          <li className="dropdown">
             <a href="/projects">Our Projects</a>
+            <ul className="dropdown-menu">
+              <li>
+                <a href="/gallery">Gallery</a>
+              </li>
+            </ul>
           </li>
+          {/* ▲▲ END ▼▼ */}
+
           <li>
             <a href="/about">About Us</a>
           </li>
+
           <li>
             <a href="/contact">Contact</a>
           </li>
+
           <li>
             <a href="/news">News</a>
           </li>
+
           <li>
             <a href="/donate" className="donate-btn">
               DONATE
             </a>
           </li>
         </ul>
+
         <div className="language-switcher">
           <select>
             <option>EN</option>
@@ -185,16 +199,10 @@ const HomePage = () => {
               "/images/mincult.jpeg",
               "/images/official.jpeg",
               "/images/port.jpeg",
-            ]
-              .concat([
-                "/images/Minrex.jpeg",
-                "/images/mincult.jpeg",
-                "/images/official.jpeg",
-                "/images/port.jpeg",
-              ])
-              .map((src, index) => (
-                <img key={index} src={src} alt={`Supporter ${index + 1}`} />
-              ))}
+              "/images/CRTV_logo.jpg",
+            ].map((src, index) => (
+              <img key={index} src={src} alt={`Supporter ${index + 1}`} />
+            ))}
           </div>
         </div>
       </section>
@@ -239,13 +247,13 @@ const HomePage = () => {
           </div>
           <div className="footer-column">
             <h3>Contact</h3>
-            <p>Email: contact@fondationaph.com</p>
+            <p>Email: ap2edaaph@gmail.com</p>
             <p>Phone: +237 675594825 / 699955221</p>
             <p>Address: B.P.10 074, Opposite SCDP Douala</p>
           </div>
           <div className="footer-column">
             <h3>Follow Us</h3>
-            <div className="social-icons">{/* social icons here */}</div>
+            <div className="social-icons"></div>
           </div>
         </div>
         <div className="footer-bottom">

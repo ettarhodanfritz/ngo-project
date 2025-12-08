@@ -1,7 +1,7 @@
 import React from "react";
 
 export default function FloatingEmail() {
-  const email = "contact@fondationaph.com"; // Replace with your email
+  const email = "ap2edaaph@gmail.com"; // Replace with your email
   const subject = "Hello!";
   const body = "I would like to contact you.";
 

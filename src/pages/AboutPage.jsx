@@ -137,15 +137,15 @@ const AboutUs = () => {
 
       {/* GALLERY SECTION */}
       <section className="about-gallery">
-        <div className="gallery-grid">
+        <div className="gallery-grid1">
           <img
             src="/images/about1.jpeg"
-            className="gallery-photo"
+            className="gallery-photo2"
             alt="Gallery 1"
           />
           <img
             src="/images/about2.jpeg"
-            className="gallery-photo"
+            className="gallery-photo2"
             alt="Gallery 2"
           />
         </div>
@@ -192,7 +192,7 @@ const AboutUs = () => {
 
           <div className="footer-column">
             <h3>Contact</h3>
-            <p>Email: contact@fondationaph.com</p>
+            <p>Email: ap2edaaph@gmail.com</p>
             <p>Phone: +237 675 594 825</p>
             <p>B.P. 10 074 Face SCDP Douala</p>
           </div>

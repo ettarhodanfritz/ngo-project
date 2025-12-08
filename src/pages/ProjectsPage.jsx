@@ -203,7 +203,7 @@ Planned Activities:
           </div>
           <div className="footer-column">
             <h3>Contact</h3>
-            <p>Email: contact@fondationaph.com</p>
+            <p>Email: ap2edaaph@gmail.com</p>
             <p>Phone: +237 675594825 / 699955221</p>
             <p>Address: B.P.10 074, Opposite SCDP Douala</p>
           </div>

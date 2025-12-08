@@ -656,3 +656,32 @@ body {
 .whatsapp-float:hover {
   transform: scale(1.1);
 }
+
+.floating-email {
+  position: fixed;
+  bottom: 20px; /* distance from bottom */
+  left: 20px; /* left side */
+  width: 60px; /* size of the button */
+  height: 60px;
+  z-index: 10000;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.floating-email:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.35);
+}
+
+.floating-email img {
+  width: 70%;
+  height: 70%;
+  object-fit: contain;
+}

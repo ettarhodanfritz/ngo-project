@@ -1,12 +1,15 @@
 import React from "react";
-import "../App.css"; // reuses existing styles
+import "../App.css";
+import { useState } from "react"; // reuses existing styles
 
 const GalleryPage = () => {
+  const [menuOpen, setMenuOpen] = useState(false);
   // array of 38 placeholder images (replace with your real image paths)
   const photos = Array.from(
-    { length: 38 },
-    (_, i) => `/images/gallery${i + 1}.jpg`
+    { length: 37 },
+    (_, i) => `/images/gallery${i + 1}.jpeg`
   );
+  photos.push("/images/gallery38.jpg");
 
   return (
     <div className="gallery-page">
@@ -16,13 +19,16 @@ const GalleryPage = () => {
           <img src="/images/logo.jpg" alt="Foundation Logo" />
         </div>
 
-        <div className="hamburger">
+        <div
+          className={`hamburger ${menuOpen ? "open" : ""}`}
+          onClick={() => setMenuOpen(!menuOpen)}
+        >
           <span></span>
           <span></span>
           <span></span>
         </div>
 
-        <ul className="nav-links">
+        <ul className={`nav-links ${menuOpen ? "active" : ""}`}>
           <li>
             <a href="/">Home</a>
           </li>

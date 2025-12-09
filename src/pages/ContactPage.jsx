@@ -28,7 +28,7 @@ const ContactPage = () => {
     setStatus({ type: "", message: "" });
 
     try {
-      const response = await fetch("http://localhost:5000/send", {
+      const response = await fetch("https://ngo-project-5.onrender.com/send", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),

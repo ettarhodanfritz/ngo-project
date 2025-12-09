@@ -1,7 +1,8 @@
+// server.js
 require("dotenv").config();
 const express = require("express");
-const nodemailer = require("nodemailer");
 const cors = require("cors");
+const sgMail = require("@sendgrid/mail");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -10,40 +11,35 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
+// Configure SendGrid with API key from .env
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
 // Contact form endpoint
 app.post("/send", async (req, res) => {
   const { name, email, message } = req.body;
 
+  // Basic validation
   if (!name || !email || !message) {
     return res.status(400).json({ error: "All fields are required!" });
   }
 
   try {
-    // Configure Nodemailer
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-    });
-
-    const mailOptions = {
-      from: email, // sender (user)
-      to: process.env.EMAIL_USER, // receiver (your client)
+    const msg = {
+      to: process.env.SENDGRID_RECEIVER, // The client who will receive the message
+      from: process.env.SENDGRID_SENDER, // Verified sender email in SendGrid
       subject: `New Contact Form Submission from ${name}`,
-      text: `
-      Name: ${name}
-      Email: ${email}
-      Message: ${message}
-      `,
+      text: `Name: ${name}\nEmail: ${email}\nMessage: ${message}`,
+      replyTo: email, // Allows client to reply directly to the user
     };
 
-    await transporter.sendMail(mailOptions);
+    await sgMail.send(msg);
+
     res.status(200).json({ success: "Message sent successfully!" });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Failed to send message" });
+    console.error("SendGrid Error:", err);
+    res
+      .status(500)
+      .json({ error: "Failed to send message. Please try again later." });
   }
 });
 

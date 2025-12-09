@@ -1,9 +1,53 @@
-import React from "react";
+import React, { useState } from "react";
 import "../App.css";
-import { useState } from "react";
 
 const ContactPage = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
+  const [status, setStatus] = useState({ type: "", message: "" });
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // Basic frontend validation
+    if (!formData.name || !formData.email || !formData.message) {
+      setStatus({ type: "error", message: "All fields are required" });
+      return;
+    }
+
+    setLoading(true);
+    setStatus({ type: "", message: "" });
+
+    try {
+      const response = await fetch("http://localhost:5000/send", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setStatus({ type: "success", message: data.success });
+        setFormData({ name: "", email: "", message: "" }); // reset form
+      } else {
+        setStatus({ type: "error", message: data.error });
+      }
+    } catch (err) {
+      setStatus({ type: "error", message: "Server error. Try again later." });
+    }
+
+    setLoading(false);
+  };
 
   return (
     <div className="contact-page">
@@ -94,6 +138,7 @@ const ContactPage = () => {
       <section className="contact-form styled-section">
         <h2>Send Us a Message</h2>
         <form
+          onSubmit={handleSubmit}
           style={{
             maxWidth: "600px",
             margin: "2rem auto",
@@ -104,7 +149,10 @@ const ContactPage = () => {
         >
           <input
             type="text"
+            name="name"
             placeholder="Your Name"
+            value={formData.name}
+            onChange={handleChange}
             required
             style={{
               padding: "0.7rem",
@@ -114,7 +162,10 @@ const ContactPage = () => {
           />
           <input
             type="email"
+            name="email"
             placeholder="Your Email"
+            value={formData.email}
+            onChange={handleChange}
             required
             style={{
               padding: "0.7rem",
@@ -123,8 +174,11 @@ const ContactPage = () => {
             }}
           />
           <textarea
+            name="message"
             placeholder="Your Message"
             rows="5"
+            value={formData.message}
+            onChange={handleChange}
             required
             style={{
               padding: "0.7rem",
@@ -132,8 +186,20 @@ const ContactPage = () => {
               border: "1px solid #ccc",
             }}
           ></textarea>
-          <button type="submit" className="btn-primary">
-            SEND MESSAGE
+
+          {status.message && (
+            <p
+              style={{
+                color: status.type === "error" ? "red" : "green",
+                textAlign: "center",
+              }}
+            >
+              {status.message}
+            </p>
+          )}
+
+          <button type="submit" className="btn-primary" disabled={loading}>
+            {loading ? "Sending..." : "SEND MESSAGE"}
           </button>
         </form>
       </section>

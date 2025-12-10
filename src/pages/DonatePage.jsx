@@ -258,8 +258,13 @@ const DonatePage = () => {
               <li>
                 <a href="/">Home</a>
               </li>
-              <li>
-                <a href="/projects">Projects</a>
+              <li className="dropdown">
+                <a href="/projects">Our Projects</a>
+                <ul className="dropdown-menu">
+                  <li>
+                    <a href="/gallery">Gallery</a>
+                  </li>
+                </ul>
               </li>
               <li>
                 <a href="/about">About</a>

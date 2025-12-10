@@ -22,8 +22,13 @@ const AboutUs = () => {
           <li>
             <a href="/">Home</a>
           </li>
-          <li>
+          <li className="dropdown">
             <a href="/projects">Our Projects</a>
+            <ul className="dropdown-menu">
+              <li>
+                <a href="/gallery">Gallery</a>
+              </li>
+            </ul>
           </li>
           <li>
             <a href="/about">About Us</a>

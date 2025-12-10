@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import emailjs from "@emailjs/browser";
 import "../App.css";
 
 const ContactPage = () => {
@@ -18,7 +19,6 @@ const ContactPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Basic frontend validation
     if (!formData.name || !formData.email || !formData.message) {
       setStatus({ type: "error", message: "All fields are required" });
       return;
@@ -27,23 +27,28 @@ const ContactPage = () => {
     setLoading(true);
     setStatus({ type: "", message: "" });
 
+    const serviceID = process.env.REACT_APP_EMAILJS_SERVICE_ID;
+    const templateID = process.env.REACT_APP_EMAILJS_TEMPLATE_ID;
+    const publicKey = process.env.REACT_APP_EMAILJS_PUBLIC_KEY;
+    const toEmail = process.env.REACT_APP_EMAILJS_TO_EMAIL;
+
+    const templateParams = {
+      name: formData.name,
+      email: formData.email,
+      message: formData.message,
+      to_email: toEmail,
+    };
+
     try {
-      const response = await fetch("https://ngo-project-10.onrender.com/send", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        setStatus({ type: "success", message: data.success });
-        setFormData({ name: "", email: "", message: "" }); // reset form
-      } else {
-        setStatus({ type: "error", message: data.error });
-      }
+      await emailjs.send(serviceID, templateID, templateParams, publicKey);
+      setStatus({ type: "success", message: "Message sent successfully!" });
+      setFormData({ name: "", email: "", message: "" });
     } catch (err) {
-      setStatus({ type: "error", message: "Server error. Try again later." });
+      console.error("EmailJS Error:", err);
+      setStatus({
+        type: "error",
+        message: "Failed to send message. Try again later.",
+      });
     }
 
     setLoading(false);
@@ -68,8 +73,13 @@ const ContactPage = () => {
           <li>
             <a href="/">Home</a>
           </li>
-          <li>
+          <li className="dropdown">
             <a href="/projects">Our Projects</a>
+            <ul className="dropdown-menu">
+              <li>
+                <a href="/gallery">Gallery</a>
+              </li>
+            </ul>
           </li>
           <li>
             <a href="/about">About Us</a>
@@ -186,7 +196,6 @@ const ContactPage = () => {
               border: "1px solid #ccc",
             }}
           ></textarea>
-
           {status.message && (
             <p
               style={{
@@ -197,36 +206,10 @@ const ContactPage = () => {
               {status.message}
             </p>
           )}
-
           <button type="submit" className="btn-primary" disabled={loading}>
             {loading ? "Sending..." : "SEND MESSAGE"}
           </button>
         </form>
-      </section>
-
-      {/* Useful Links Section */}
-      <section className="useful-links styled-section">
-        <h2>Useful Links</h2>
-        <div className="links-grid">
-          <a href="/about" className="link-card">
-            About Us
-          </a>
-          <a href="/contact" className="link-card">
-            Contact
-          </a>
-          <a href="/projects" className="link-card">
-            Our Projects
-          </a>
-          <a href="/donate" className="link-card">
-            Donate
-          </a>
-          <a href="/news" className="link-card">
-            News
-          </a>
-          <a href="/media" className="link-card">
-            Major Media Event
-          </a>
-        </div>
       </section>
 
       {/* Map Section */}

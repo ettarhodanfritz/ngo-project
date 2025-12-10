@@ -13,6 +13,7 @@ app.use(express.json());
 
 // Configure SendGrid with API key from .env
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+console.log("Receiver is:", process.env.SENDGRID_RECEIVER);
 
 // Contact form endpoint
 app.post("/send", async (req, res) => {

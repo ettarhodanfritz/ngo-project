@@ -200,6 +200,8 @@ const HomePage = () => {
               "/images/official.jpeg",
               "/images/port.jpeg",
               "/images/CRTV_logo.jpg",
+              "/images/SIC1.jpeg",
+              "/images/logo7.jpg",
             ].map((src, index) => (
               <img key={index} src={src} alt={`Supporter ${index + 1}`} />
             ))}
@@ -250,10 +252,6 @@ const HomePage = () => {
             <p>Email: ap2edaaph@gmail.com</p>
             <p>Phone: +237 675594825 / 699955221</p>
             <p>Address: B.P.10 074, Opposite SCDP Douala</p>
-          </div>
-          <div className="footer-column">
-            <h3>Follow Us</h3>
-            <div className="social-icons"></div>
           </div>
         </div>
         <div className="footer-bottom">

@@ -1,9 +1,28 @@
 import React, { useState } from "react";
 import "../App.css";
+import { FlutterWaveButton } from "flutterwave-react-v3";
 
 const DonatePage = () => {
   const [amount, setAmount] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
+
+  // Flutterwave config
+  const flutterwaveConfig = {
+    public_key: "FLWPUBK_TEST-5daf18dcc54498cce160b015453ee36b-X", // replace with your sandbox key
+
+    tx_ref: Date.now(),
+    amount: parseInt(amount || 0),
+    currency: "XAF",
+    payment_options: "card,bank,mobilemoney",
+    customer: {
+      email: "donor@example.com",
+      name: "Donor Name",
+    },
+    customizations: {
+      title: "Donation",
+      description: "Support the Abram Petrovich Hannibal Foundation",
+    },
+  };
 
   return (
     <div className="donation-page">
@@ -197,31 +216,28 @@ const DonatePage = () => {
                 marginTop: "0.5rem",
               }}
             >
-              <button className="btn-secondary" type="button">
-                Visa / Mastercard
-              </button>
-              <button className="btn-secondary" type="button">
-                Bank Transfer
-              </button>
-              <button className="btn-secondary" type="button">
-                Orange Money
-              </button>
-              <button className="btn-secondary" type="button">
-                MTN Mobile Money
-              </button>
-              <button className="btn-secondary" type="button">
-                Other Mobile Payment
-              </button>
+              <FlutterWaveButton
+                {...flutterwaveConfig}
+                text="Visa / Mastercard"
+                className="btn-secondary"
+              />
+              <FlutterWaveButton
+                {...flutterwaveConfig}
+                text="Bank Transfer"
+                className="btn-secondary"
+              />
+              <FlutterWaveButton
+                {...flutterwaveConfig}
+                text="Orange Money"
+                className="btn-secondary"
+              />
+              <FlutterWaveButton
+                {...flutterwaveConfig}
+                text="MTN Mobile Money"
+                className="btn-secondary"
+              />
             </div>
           </div>
-
-          <button
-            type="submit"
-            className="btn-primary"
-            style={{ marginTop: "1.5rem" }}
-          >
-            Donate
-          </button>
         </form>
 
         {/* Photo beside form */}
@@ -282,10 +298,6 @@ const DonatePage = () => {
             <p>Email: ap2edaaph@gmail.com</p>
             <p>Phone: +237 675594825 / 699955221</p>
             <p>Address: B.P.10 074, Opposite SCDP Douala</p>
-          </div>
-          <div className="footer-column">
-            <h3>Follow Us</h3>
-            <div className="social-icons">{/* social icons here */}</div>
           </div>
         </div>
         <div className="footer-bottom">

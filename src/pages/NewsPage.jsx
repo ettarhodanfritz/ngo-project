@@ -131,10 +131,6 @@ const NewsPage = () => {
             <p>Phone: +237 675594825 / 699955221</p>
             <p>Address: B.P.10 074, Opposite SCDP Douala</p>
           </div>
-          <div className="footer-column">
-            <h3>Follow Us</h3>
-            <div className="social-icons">{/* social icons here */}</div>
-          </div>
         </div>
         <div className="footer-bottom">
           <p>

@@ -6,7 +6,7 @@ const GalleryPage = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   // array of 38 placeholder images (replace with your real image paths)
   const photos = Array.from(
-    { length: 37 },
+    { length: 50 },
     (_, i) => `/images/gallery${i + 1}.jpeg`
   );
   photos.push("/images/gallery38.jpg");
@@ -89,6 +89,7 @@ const GalleryPage = () => {
             Explore the moments that define the Abram Petrovich Hannibal
             Foundation
           </p>
+          <p>The Hannibal Museum of Saint Ptersburg</p>
         </div>
       </section>
 

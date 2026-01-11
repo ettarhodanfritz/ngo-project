@@ -105,13 +105,13 @@ const HomePage = () => {
           <div className="news-card">
             <h3>Major Media Event</h3>
             <p>
-              International Economic Forum of Saint Petersburg (SPIEF’25), June
-              18-21, 2025
+              Major economic and cultural event Russia-Africa Economic and
+              Cultural forum in Moscow, June 11-13, 2026
             </p>
           </div>
           <div className="news-card">
             <h3>Major Media Event</h3>
-            <p>Press conference on SPIEF’25 – June 11, 2025 in Yaoundé</p>
+            <p>St. Petersburg International Economic Forum, June 3-6, 2026</p>
           </div>
           <div className="news-card">
             <h3>Major Media Event</h3>

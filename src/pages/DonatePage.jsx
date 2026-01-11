@@ -1,27 +1,154 @@
 import React, { useState } from "react";
+import emailjs from "@emailjs/browser";
 import "../App.css";
-import { FlutterWaveButton } from "flutterwave-react-v3";
 
 const DonatePage = () => {
   const [amount, setAmount] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
+  const [bankScreenshot, setBankScreenshot] = useState(null);
+  const [showBankDetails, setShowBankDetails] = useState(false);
 
-  // Flutterwave config
-  const flutterwaveConfig = {
-    public_key: "FLWPUBK_TEST-5daf18dcc54498cce160b015453ee36b-X", // replace with your sandbox key
+  const EMAILJS_SERVICE_ID = process.env.REACT_APP_EMAILJS_SERVICE_ID;
+  const EMAILJS_TEMPLATE_ID = process.env.REACT_APP_EMAILJS_TEMPLATE_ID;
+  const EMAILJS_PUBLIC_KEY = process.env.REACT_APP_EMAILJS_PUBLIC_KEY;
+  const API_BASE = "http://localhost:5000";
 
-    tx_ref: Date.now(),
-    amount: parseInt(amount || 0),
-    currency: "XAF",
-    payment_options: "card,bank,mobilemoney",
-    customer: {
-      email: "donor@example.com",
-      name: "Donor Name",
-    },
-    customizations: {
-      title: "Donation",
-      description: "Support the Abram Petrovich Hannibal Foundation",
-    },
+  // ----- CamPay Payment Logic -----
+  const handleCamPayPayment = (method) => {
+    if (!amount || parseInt(amount) <= 0) {
+      alert("Please enter a valid donation amount.");
+      return;
+    }
+
+    const donor = {
+      firstName: document.querySelector('input[name="firstName"]').value.trim(),
+      lastName: document.querySelector('input[name="lastName"]').value.trim(),
+      email: document.querySelector('input[name="email"]').value.trim(),
+      phone: document.querySelector('input[name="phone"]')?.value.trim(),
+    };
+
+    if(!donor.firstName || !donor.email || !donor.phone) {
+      alert("Please fill in your first name, email, and phone.");
+      return;
+    }
+
+    fetch(`${API_BASE}/api/campay/initiate`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        amount: parseInt(amount),
+        donor,
+        phone: donor.phone,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.payment_url) {
+          // Redirect donor to CamPay payment page
+          window.location.href = data.payment_url;
+        } else {
+          alert("Error initiating payment. Please try again.");
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        alert("Payment failed. Check console for details.");
+      });
+  };
+
+  // Show Bank Details
+  const handleBankClick = () => {
+    if (!amount || parseInt(amount) <= 0) {
+      alert("Please enter a valid donation amount.");
+      return;
+    }
+    setShowBankDetails(true);
+  };
+
+  // Handle Bank Transfer submission
+  const handleBankSubmit = async () => {
+    const donor = {
+      firstName: document.querySelector('input[name="firstName"]').value,
+      lastName: document.querySelector('input[name="lastName"]').value,
+      email: document.querySelector('input[name="email"]').value,
+      phone: document.querySelector('input[name="phone"]')?.value || "",
+    };
+
+    if (!amount || parseInt(amount) <= 0) {
+      alert("Please enter a valid donation amount.");
+      return;
+    }
+
+    if (!bankScreenshot) {
+      alert("Please upload a screenshot of your bank transfer.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("amount", amount);
+    formData.append("donorFirstName", donor.firstName);
+    formData.append("donorLastName", donor.lastName);
+    formData.append("donorEmail", donor.email);
+    formData.append("donorPhone", donor.phone);
+    formData.append("screenshot", bankScreenshot);
+
+    try {
+      const res = await fetch(`${API_BASE}/api/bank/submit`, {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        alert(
+          "Bank transfer submitted successfully! Both donor and recipient will be notified."
+        );
+        setBankScreenshot(null);
+        setShowBankDetails(false);
+
+        // Notify donor via EmailJS
+        const donorEmailParams = {
+          to_name: donor.firstName,
+          amount: amount,
+          donor_email: donor.email,
+          message: `Thank you for your donation of ${amount} XAF!`,
+        };
+        emailjs
+          .send(
+            EMAILJS_SERVICE_ID,
+            EMAILJS_TEMPLATE_ID,
+            donorEmailParams,
+            EMAILJS_PUBLIC_KEY
+          )
+          .then((response) => console.log("Donor email sent", response.status))
+          .catch((err) => console.error("Email error:", err));
+
+        // Notify foundation via EmailJS
+        const foundationEmailParams = {
+          to_name: "AP2EDA-APH",
+          amount: amount,
+          donor_name: `${donor.firstName} ${donor.lastName}`,
+          donor_email: donor.email,
+        };
+        emailjs
+          .send(
+            EMAILJS_SERVICE_ID,
+            EMAILJS_TEMPLATE_ID,
+            foundationEmailParams,
+            EMAILJS_PUBLIC_KEY
+          )
+          .then((response) =>
+            console.log("Foundation email sent", response.status)
+          )
+          .catch((err) => console.error("Email error:", err));
+      } else {
+        alert("Failed to submit. Please try again.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Error submitting bank transfer. Check console for details.");
+    }
   };
 
   return (
@@ -190,6 +317,19 @@ const DonatePage = () => {
                 border: "1px solid #ccc",
               }}
             />
+            <label>Phone Number</label>
+            <input
+              type="tel"
+              name="phone"
+              placeholder="Phone Number"
+              style={{
+                width: "100%",
+                padding: "0.5rem",
+                margin: "0.3rem 0",
+                borderRadius: "5px",
+                border: "1px solid #ccc",
+              }}
+            />
           </div>
 
           {/* Anonymous Donation */}
@@ -216,26 +356,69 @@ const DonatePage = () => {
                 marginTop: "0.5rem",
               }}
             >
-              <FlutterWaveButton
-                {...flutterwaveConfig}
-                text="Visa / Mastercard"
+              <button
+                type="button"
                 className="btn-secondary"
-              />
-              <FlutterWaveButton
-                {...flutterwaveConfig}
-                text="Bank Transfer"
+                onClick={() => handleCamPayPayment("MTN")}
+              >
+                MTN Mobile Money
+              </button>
+              <button
+                type="button"
                 className="btn-secondary"
-              />
-              <FlutterWaveButton
-                {...flutterwaveConfig}
-                text="Orange Money"
-                className="btn-secondary"
-              />
-              <FlutterWaveButton
-                {...flutterwaveConfig}
-                text="MTN Mobile Money"
-                className="btn-secondary"
-              />
+                onClick={() => handleCamPayPayment("Orange")}
+              >
+                Orange Money
+              </button>
+
+              {/* Bank Transfer */}
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "1rem",
+                }}
+              >
+                <button
+                  type="button"
+                  className="btn-secondary"
+                  onClick={handleBankClick}
+                >
+                  Bank Transfer
+                </button>
+
+                {showBankDetails && (
+                  <div
+                    style={{
+                      background: "#f0f0f0",
+                      padding: "1rem",
+                      borderRadius: "8px",
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "0.5rem",
+                    }}
+                  >
+                    <h4>Bank Details</h4>
+                    <p>Bank Name: ABC Bank</p>
+                    <p>Account Name: Abram Petrovich Hannibal Foundation</p>
+                    <p>Account Number: 1234567890</p>
+                    <p>SWIFT/BIC: ABCDXX</p>
+
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => setBankScreenshot(e.target.files[0])}
+                    />
+                    <button
+                      type="button"
+                      className="btn-secondary"
+                      onClick={handleBankSubmit}
+                    >
+                      Submit Bank Transfer Screenshot
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </form>
